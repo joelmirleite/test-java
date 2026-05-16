@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+                  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+                  xmlns:tns="http://xmlns.oracle.com/pcbpel/adapter/db/sp/AtribuicaoMedicoDestino"
+                  xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+                  name="AtribuicaoMedicoDestino"
+                  targetNamespace="http://xmlns.oracle.com/pcbpel/adapter/db/sp/AtribuicaoMedicoDestino">
+
+    <!-- Types for DB Stored Procedure Call: igif.inscr_api_ws.atribuicao_medico_destino -->
+    <wsdl:types>
+        <xsd:schema targetNamespace="http://xmlns.oracle.com/pcbpel/adapter/db/sp/AtribuicaoMedicoDestino"
+                    elementFormDefault="qualified">
+
+            <!-- Input Parameters for igif.inscr_api_ws.atribuicao_medico_destino -->
+            <xsd:element name="InputParameters">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="P_EVENT_ID" type="xsd:long" minOccurs="1">
+                            <xsd:annotation>
+                                <xsd:documentation>Identificador univoco do evento</xsd:documentation>
+                            </xsd:annotation>
+                        </xsd:element>
+                        <xsd:element name="P_NNU" type="xsd:long" minOccurs="1">
+                            <xsd:annotation>
+                                <xsd:documentation>Numero Nacional de Utente</xsd:documentation>
+                            </xsd:annotation>
+                        </xsd:element>
+                        <xsd:element name="P_DATA_NASC" type="xsd:dateTime" minOccurs="1">
+                            <xsd:annotation>
+                                <xsd:documentation>Data de nascimento do Utente</xsd:documentation>
+                            </xsd:annotation>
+                        </xsd:element>
+                        <xsd:element name="P_SYS_ENTIDADES_ID_ORIGEM" type="xsd:long" minOccurs="1">
+                            <xsd:annotation>
+                                <xsd:documentation>ID da unidade de origem do utente</xsd:documentation>
+                            </xsd:annotation>
+                        </xsd:element>
+                        <xsd:element name="P_PRO_EQUIPA_ID_ORIGEM" type="xsd:long" minOccurs="1">
+                            <xsd:annotation>
+                                <xsd:documentation>ID da equipa de origem</xsd:documentation>
+                            </xsd:annotation>
+                        </xsd:element>
+                        <xsd:element name="P_PRO_EQUIPA_ID_DESTINO" type="xsd:long" minOccurs="1">
+                            <xsd:annotation>
+                                <xsd:documentation>ID da equipa de destino</xsd:documentation>
+                            </xsd:annotation>
+                        </xsd:element>
+                        <xsd:element name="P_PARENTESCO" type="xsd:string" minOccurs="1">
+                            <xsd:annotation>
+                                <xsd:documentation>Designacao do grau de parentesco</xsd:documentation>
+                            </xsd:annotation>
+                        </xsd:element>
+                        <xsd:element name="P_PROC_FAM" type="xsd:long" minOccurs="1">
+                            <xsd:annotation>
+                                <xsd:documentation>Numero do Processo de Familia</xsd:documentation>
+                            </xsd:annotation>
+                        </xsd:element>
+                        <xsd:element name="P_COD_RESPOSTA" type="xsd:string" minOccurs="0">
+                            <xsd:annotation>
+                                <xsd:documentation>Codigo de Resposta (OUT)</xsd:documentation>
+                            </xsd:annotation>
+                        </xsd:element>
+                        <xsd:element name="P_MSG_RESPOSTA" type="xsd:string" minOccurs="0">
+                            <xsd:annotation>
+                                <xsd:documentation>Mensagem de Resposta (OUT)</xsd:documentation>
+                            </xsd:annotation>
+                        </xsd:element>
+                        <xsd:element name="P_NOVO_PROC_FAM" type="xsd:long" nillable="true" minOccurs="0">
+                            <xsd:annotation>
+                                <xsd:documentation>Novo numero do Processo de Familia (OUT)</xsd:documentation>
+                            </xsd:annotation>
+                        </xsd:element>
+                        <xsd:element name="P_COD_PARENTESCO" type="xsd:string" nillable="true" minOccurs="0">
+                            <xsd:annotation>
+                                <xsd:documentation>Codigo de Parentesco (OUT)</xsd:documentation>
+                            </xsd:annotation>
+                        </xsd:element>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+
+            <!-- Output Parameters from igif.inscr_api_ws.atribuicao_medico_destino -->
+            <xsd:element name="OutputParameters">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="P_COD_RESPOSTA" type="xsd:string">
+                            <xsd:annotation>
+                                <xsd:documentation>Codigo de Resposta</xsd:documentation>
+                            </xsd:annotation>
+                        </xsd:element>
+                        <xsd:element name="P_MSG_RESPOSTA" type="xsd:string">
+                            <xsd:annotation>
+                                <xsd:documentation>Mensagem de Resposta</xsd:documentation>
+                            </xsd:annotation>
+                        </xsd:element>
+                        <xsd:element name="P_NOVO_PROC_FAM" type="xsd:long" nillable="true" minOccurs="0">
+                            <xsd:annotation>
+                                <xsd:documentation>Novo numero do Processo de Familia</xsd:documentation>
+                            </xsd:annotation>
+                        </xsd:element>
+                        <xsd:element name="P_COD_PARENTESCO" type="xsd:string" nillable="true" minOccurs="0">
+                            <xsd:annotation>
+                                <xsd:documentation>Codigo de Parentesco</xsd:documentation>
+                            </xsd:annotation>
+                        </xsd:element>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+
+        </xsd:schema>
+    </wsdl:types>
+
+    <!-- Messages -->
+    <wsdl:message name="args_in_msg">
+        <wsdl:part name="InputParameters" element="tns:InputParameters"/>
+    </wsdl:message>
+
+    <wsdl:message name="args_out_msg">
+        <wsdl:part name="OutputParameters" element="tns:OutputParameters"/>
+    </wsdl:message>
+
+    <!-- Port Type -->
+    <wsdl:portType name="AtribuicaoMedicoDestino_ptt">
+        <wsdl:operation name="AtribuicaoMedicoDestino">
+            <wsdl:input message="tns:args_in_msg"/>
+            <wsdl:output message="tns:args_out_msg"/>
+        </wsdl:operation>
+    </wsdl:portType>
+
+    <!-- Binding -->
+    <wsdl:binding name="AtribuicaoMedicoDestino_ptt-binding" type="tns:AtribuicaoMedicoDestino_ptt">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <wsdl:operation name="AtribuicaoMedicoDestino">
+            <soap:operation soapAction="AtribuicaoMedicoDestino"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+
+</wsdl:definitions>

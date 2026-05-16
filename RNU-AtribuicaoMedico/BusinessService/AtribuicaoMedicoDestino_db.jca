@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<adapter-config name="AtribuicaoMedicoDestino_db"
+                adapter="Database Adapter"
+                wsdlLocation="AtribuicaoMedicoDestino_db.wsdl"
+                xmlns="http://platform.integration.oracle/blocks/adapter/fw/metadata">
+
+    <connection-factory location="eis/DB/igifDS" UIConnectionName="igifDS"/>
+
+    <endpoint-interaction portType="AtribuicaoMedicoDestino_ptt"
+                          operation="AtribuicaoMedicoDestino">
+        <interaction-spec className="oracle.tip.adapter.db.DBPureSQLInteractionSpec">
+            <property name="SqlString"
+                      value="BEGIN igif.inscr_api_ws.atribuicao_medico_destino(p_event_id => ?, p_nnu => ?, p_data_nasc => ?, p_sys_entidades_id_origem => ?, p_pro_equipa_id_origem => ?, p_pro_equipa_id_destino => ?, p_parentesco => ?, p_proc_fam => ?, p_cod_resposta => ?, p_msg_resposta => ?, p_novo_proc_fam => ?, p_cod_parentesco => ?); END;"/>
+            <property name="GetActiveUnitOfWork" value="false"/>
+        </interaction-spec>
+    </endpoint-interaction>
+
+</adapter-config>

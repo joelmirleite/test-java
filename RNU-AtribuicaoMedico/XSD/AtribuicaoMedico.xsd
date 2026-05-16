@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            xmlns:tns="http://igif.min-saude.pt/rnu/atribuicaomedico"
+            targetNamespace="http://igif.min-saude.pt/rnu/atribuicaomedico"
+            elementFormDefault="qualified">
+
+    <!-- Request Element -->
+    <xsd:element name="AtribuicaoMedicoRequest" type="tns:AtribuicaoMedicoRequestType"/>
+
+    <!-- Response Element -->
+    <xsd:element name="AtribuicaoMedicoResponse" type="tns:AtribuicaoMedicoResponseType"/>
+
+    <!-- Request Type -->
+    <xsd:complexType name="AtribuicaoMedicoRequestType">
+        <xsd:sequence>
+            <xsd:element name="event_id" type="xsd:long" minOccurs="1" maxOccurs="1">
+                <xsd:annotation>
+                    <xsd:documentation>Identificador univoco do evento</xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="NNU" type="xsd:long" minOccurs="1" maxOccurs="1">
+                <xsd:annotation>
+                    <xsd:documentation>Numero Nacional de Utente</xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="DataNasc" type="xsd:dateTime" minOccurs="1" maxOccurs="1">
+                <xsd:annotation>
+                    <xsd:documentation>Data de nascimento do Utente</xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="SYS_ENTIDADES_ID_ORIGEM" type="xsd:long" minOccurs="1" maxOccurs="1">
+                <xsd:annotation>
+                    <xsd:documentation>ID da unidade de origem do utente</xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="PRO_EQUIPA_ID_ORIGEM" type="xsd:long" minOccurs="1" maxOccurs="1">
+                <xsd:annotation>
+                    <xsd:documentation>ID da equipa de origem</xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="PRO_EQUIPA_ID_DESTINO" type="xsd:long" minOccurs="1" maxOccurs="1">
+                <xsd:annotation>
+                    <xsd:documentation>ID da equipa de destino</xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="Parentesco" type="xsd:string" minOccurs="1" maxOccurs="1">
+                <xsd:annotation>
+                    <xsd:documentation>Designacao do grau de parentesco</xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="PROC_FAM" type="xsd:long" minOccurs="1" maxOccurs="1">
+                <xsd:annotation>
+                    <xsd:documentation>Numero do Processo de Familia</xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <!-- Response Type -->
+    <xsd:complexType name="AtribuicaoMedicoResponseType">
+        <xsd:sequence>
+            <xsd:element name="CodigoResposta" type="xsd:string" minOccurs="1" maxOccurs="1">
+                <xsd:annotation>
+                    <xsd:documentation>Codigo de Resposta</xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="MensagemResposta" type="xsd:string" minOccurs="1" maxOccurs="1">
+                <xsd:annotation>
+                    <xsd:documentation>Mensagem de Resposta</xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="NovoProcessoFamilia" type="xsd:long" minOccurs="0" maxOccurs="1">
+                <xsd:annotation>
+                    <xsd:documentation>Novo numero do Processo de Familia (em caso de sucesso)</xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="CodigoParentesco" type="xsd:string" minOccurs="0" maxOccurs="1">
+                <xsd:annotation>
+                    <xsd:documentation>Codigo de Parentesco (em caso de sucesso)</xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+
+</xsd:schema>

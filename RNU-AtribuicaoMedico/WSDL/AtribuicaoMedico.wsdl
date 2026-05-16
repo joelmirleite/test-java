@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+                  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+                  xmlns:tns="http://igif.min-saude.pt/rnu/atribuicaomedico"
+                  xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+                  name="AtribuicaoMedicoService"
+                  targetNamespace="http://igif.min-saude.pt/rnu/atribuicaomedico">
+
+    <!-- Types -->
+    <wsdl:types>
+        <xsd:schema>
+            <xsd:import namespace="http://igif.min-saude.pt/rnu/atribuicaomedico"
+                        schemaLocation="../XSD/AtribuicaoMedico.xsd"/>
+        </xsd:schema>
+    </wsdl:types>
+
+    <!-- Messages -->
+    <wsdl:message name="AtribuicaoMedicoRequestMessage">
+        <wsdl:part name="parameters" element="tns:AtribuicaoMedicoRequest"/>
+    </wsdl:message>
+
+    <wsdl:message name="AtribuicaoMedicoResponseMessage">
+        <wsdl:part name="parameters" element="tns:AtribuicaoMedicoResponse"/>
+    </wsdl:message>
+
+    <!-- Port Type -->
+    <wsdl:portType name="AtribuicaoMedicoPortType">
+        <wsdl:operation name="AtribuicaoMedico">
+            <wsdl:input message="tns:AtribuicaoMedicoRequestMessage"/>
+            <wsdl:output message="tns:AtribuicaoMedicoResponseMessage"/>
+        </wsdl:operation>
+    </wsdl:portType>
+
+    <!-- Binding -->
+    <wsdl:binding name="AtribuicaoMedicoBinding" type="tns:AtribuicaoMedicoPortType">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <wsdl:operation name="AtribuicaoMedico">
+            <soap:operation soapAction="http://igif.min-saude.pt/rnu/atribuicaomedico/AtribuicaoMedico"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+
+    <!-- Service -->
+    <wsdl:service name="AtribuicaoMedicoService">
+        <wsdl:port name="AtribuicaoMedicoPort" binding="tns:AtribuicaoMedicoBinding">
+            <soap:address location="http://localhost:7001/OSB-RNU-AtribuicaoMedico-context-root/AtribuicaoMedicoService"/>
+        </wsdl:port>
+    </wsdl:service>
+
+</wsdl:definitions>
