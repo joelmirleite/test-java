@@ -1,0 +1,358 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:soapui-project id="AtribuicaoMedico-Project"
+                    activeEnvironment="Default"
+                    name="AtribuicaoMedico-Test"
+                    resourceRoot=""
+                    soapui-version="5.7.0"
+                    abortOnError="false"
+                    runType="SEQUENTIAL"
+                    xmlns:con="http://eviware.com/soapui/config">
+
+    <!-- Properties globais do projeto -->
+    <con:settings/>
+    <con:properties>
+        <con:property>
+            <con:name>OSB_HOST</con:name>
+            <con:value>localhost</con:value>
+        </con:property>
+        <con:property>
+            <con:name>OSB_PORT</con:name>
+            <con:value>7001</con:value>
+        </con:property>
+        <con:property>
+            <con:name>ENDPOINT_URL</con:name>
+            <con:value>http://${#Project#OSB_HOST}:${#Project#OSB_PORT}/RNU-AtribuicaoMedico/ProxyService/AtribuicaoMedico_PS</con:value>
+        </con:property>
+    </con:properties>
+
+    <!-- Interface baseada no WSDL -->
+    <con:interface xsi:type="con:WsdlInterface"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   name="AtribuicaoMedicoBinding"
+                   type="wsdl"
+                   bindingName="{http://igif.min-saude.pt/rnu/atribuicaomedico}AtribuicaoMedicoBinding"
+                   soapVersion="1_1"
+                   anonymous="optional"
+                   definition="WSDL/AtribuicaoMedico.wsdl">
+        <con:settings/>
+        <con:definitionCache>
+            <con:part>
+                <con:url>WSDL/AtribuicaoMedico.wsdl</con:url>
+                <con:type>http://schemas.xmlsoap.org/wsdl/</con:type>
+            </con:part>
+        </con:definitionCache>
+        <con:endpoints>
+            <con:endpoint>${#Project#ENDPOINT_URL}</con:endpoint>
+        </con:endpoints>
+
+        <con:operation id="AtribuicaoMedico" name="AtribuicaoMedico"
+                       bindingOperationName="AtribuicaoMedico"
+                       type="Request-Response"
+                       action="http://igif.min-saude.pt/rnu/atribuicaomedico/AtribuicaoMedico"
+                       inputName="" receivesAttachments="false"
+                       sendsAttachments="false" anonymous="optional">
+            <con:settings/>
+
+            <!-- TC01: Teste com dados validos -->
+            <con:request name="TC01_DadosValidos" id="TC01">
+                <con:settings>
+                    <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/&gt;</con:setting>
+                </con:settings>
+                <con:encoding>UTF-8</con:encoding>
+                <con:endpoint>${#Project#ENDPOINT_URL}</con:endpoint>
+                <con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
+                     xmlns:atr="http://igif.min-saude.pt/rnu/atribuicaomedico">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <atr:AtribuicaoMedicoRequest>
+         <atr:event_id>1001</atr:event_id>
+         <atr:NNU>123456789</atr:NNU>
+         <atr:DataNasc>1985-06-15T00:00:00</atr:DataNasc>
+         <atr:SYS_ENTIDADES_ID_ORIGEM>500</atr:SYS_ENTIDADES_ID_ORIGEM>
+         <atr:PRO_EQUIPA_ID_ORIGEM>10</atr:PRO_EQUIPA_ID_ORIGEM>
+         <atr:PRO_EQUIPA_ID_DESTINO>20</atr:PRO_EQUIPA_ID_DESTINO>
+         <atr:Parentesco>Proprio</atr:Parentesco>
+         <atr:PROC_FAM>99001</atr:PROC_FAM>
+      </atr:AtribuicaoMedicoRequest>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request>
+                <con:assertion type="SOAP Response" id="SoapResponse"/>
+                <con:assertion type="Schema Compliance" id="SchemaCompliance"/>
+                <con:assertion type="XPath Match" id="CheckCodigoResposta">
+                    <con:configuration>
+                        <path>declare namespace tns='http://igif.min-saude.pt/rnu/atribuicaomedico';
+//tns:CodigoResposta</path>
+                        <content>exists</content>
+                        <allowWildcards>true</allowWildcards>
+                    </con:configuration>
+                </con:assertion>
+                <con:assertion type="XPath Match" id="CheckMensagemResposta">
+                    <con:configuration>
+                        <path>declare namespace tns='http://igif.min-saude.pt/rnu/atribuicaomedico';
+//tns:MensagemResposta</path>
+                        <content>exists</content>
+                        <allowWildcards>true</allowWildcards>
+                    </con:configuration>
+                </con:assertion>
+            </con:request>
+
+            <!-- TC02: Teste com NNU diferente -->
+            <con:request name="TC02_OutroUtente" id="TC02">
+                <con:settings>
+                    <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/&gt;</con:setting>
+                </con:settings>
+                <con:encoding>UTF-8</con:encoding>
+                <con:endpoint>${#Project#ENDPOINT_URL}</con:endpoint>
+                <con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
+                     xmlns:atr="http://igif.min-saude.pt/rnu/atribuicaomedico">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <atr:AtribuicaoMedicoRequest>
+         <atr:event_id>1002</atr:event_id>
+         <atr:NNU>987654321</atr:NNU>
+         <atr:DataNasc>1990-03-22T00:00:00</atr:DataNasc>
+         <atr:SYS_ENTIDADES_ID_ORIGEM>501</atr:SYS_ENTIDADES_ID_ORIGEM>
+         <atr:PRO_EQUIPA_ID_ORIGEM>11</atr:PRO_EQUIPA_ID_ORIGEM>
+         <atr:PRO_EQUIPA_ID_DESTINO>21</atr:PRO_EQUIPA_ID_DESTINO>
+         <atr:Parentesco>Conjuge</atr:Parentesco>
+         <atr:PROC_FAM>99002</atr:PROC_FAM>
+      </atr:AtribuicaoMedicoRequest>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request>
+                <con:assertion type="SOAP Response" id="SoapResponse"/>
+                <con:assertion type="Schema Compliance" id="SchemaCompliance"/>
+            </con:request>
+
+            <!-- TC03: Teste com parentesco Filho -->
+            <con:request name="TC03_ParentescoFilho" id="TC03">
+                <con:settings>
+                    <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/&gt;</con:setting>
+                </con:settings>
+                <con:encoding>UTF-8</con:encoding>
+                <con:endpoint>${#Project#ENDPOINT_URL}</con:endpoint>
+                <con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
+                     xmlns:atr="http://igif.min-saude.pt/rnu/atribuicaomedico">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <atr:AtribuicaoMedicoRequest>
+         <atr:event_id>1003</atr:event_id>
+         <atr:NNU>111222333</atr:NNU>
+         <atr:DataNasc>2010-11-05T00:00:00</atr:DataNasc>
+         <atr:SYS_ENTIDADES_ID_ORIGEM>502</atr:SYS_ENTIDADES_ID_ORIGEM>
+         <atr:PRO_EQUIPA_ID_ORIGEM>12</atr:PRO_EQUIPA_ID_ORIGEM>
+         <atr:PRO_EQUIPA_ID_DESTINO>22</atr:PRO_EQUIPA_ID_DESTINO>
+         <atr:Parentesco>Filho</atr:Parentesco>
+         <atr:PROC_FAM>99003</atr:PROC_FAM>
+      </atr:AtribuicaoMedicoRequest>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request>
+                <con:assertion type="SOAP Response" id="SoapResponse"/>
+                <con:assertion type="Schema Compliance" id="SchemaCompliance"/>
+            </con:request>
+
+            <!-- TC04: Teste com mesma equipa origem e destino -->
+            <con:request name="TC04_MesmaEquipa" id="TC04">
+                <con:settings>
+                    <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/&gt;</con:setting>
+                </con:settings>
+                <con:encoding>UTF-8</con:encoding>
+                <con:endpoint>${#Project#ENDPOINT_URL}</con:endpoint>
+                <con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
+                     xmlns:atr="http://igif.min-saude.pt/rnu/atribuicaomedico">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <atr:AtribuicaoMedicoRequest>
+         <atr:event_id>1004</atr:event_id>
+         <atr:NNU>444555666</atr:NNU>
+         <atr:DataNasc>1975-01-30T00:00:00</atr:DataNasc>
+         <atr:SYS_ENTIDADES_ID_ORIGEM>503</atr:SYS_ENTIDADES_ID_ORIGEM>
+         <atr:PRO_EQUIPA_ID_ORIGEM>15</atr:PRO_EQUIPA_ID_ORIGEM>
+         <atr:PRO_EQUIPA_ID_DESTINO>15</atr:PRO_EQUIPA_ID_DESTINO>
+         <atr:Parentesco>Proprio</atr:Parentesco>
+         <atr:PROC_FAM>99004</atr:PROC_FAM>
+      </atr:AtribuicaoMedicoRequest>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request>
+                <con:assertion type="SOAP Response" id="SoapResponse"/>
+                <con:assertion type="Schema Compliance" id="SchemaCompliance"/>
+            </con:request>
+
+            <!-- TC05: Teste com PROC_FAM zero (novo processo) -->
+            <con:request name="TC05_NovoProcessoFamilia" id="TC05">
+                <con:settings>
+                    <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/&gt;</con:setting>
+                </con:settings>
+                <con:encoding>UTF-8</con:encoding>
+                <con:endpoint>${#Project#ENDPOINT_URL}</con:endpoint>
+                <con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
+                     xmlns:atr="http://igif.min-saude.pt/rnu/atribuicaomedico">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <atr:AtribuicaoMedicoRequest>
+         <atr:event_id>1005</atr:event_id>
+         <atr:NNU>777888999</atr:NNU>
+         <atr:DataNasc>2000-07-18T00:00:00</atr:DataNasc>
+         <atr:SYS_ENTIDADES_ID_ORIGEM>504</atr:SYS_ENTIDADES_ID_ORIGEM>
+         <atr:PRO_EQUIPA_ID_ORIGEM>13</atr:PRO_EQUIPA_ID_ORIGEM>
+         <atr:PRO_EQUIPA_ID_DESTINO>23</atr:PRO_EQUIPA_ID_DESTINO>
+         <atr:Parentesco>Proprio</atr:Parentesco>
+         <atr:PROC_FAM>0</atr:PROC_FAM>
+      </atr:AtribuicaoMedicoRequest>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request>
+                <con:assertion type="SOAP Response" id="SoapResponse"/>
+                <con:assertion type="Schema Compliance" id="SchemaCompliance"/>
+                <con:assertion type="XPath Match" id="CheckNovoProcessoFamilia">
+                    <con:configuration>
+                        <path>declare namespace tns='http://igif.min-saude.pt/rnu/atribuicaomedico';
+//tns:NovoProcessoFamilia</path>
+                        <content>exists</content>
+                        <allowWildcards>true</allowWildcards>
+                    </con:configuration>
+                </con:assertion>
+            </con:request>
+
+        </con:operation>
+    </con:interface>
+
+    <!-- Test Suite -->
+    <con:testSuite id="TestSuite_AtribuicaoMedico" name="AtribuicaoMedico_TestSuite">
+        <con:settings/>
+        <con:runType>SEQUENTIAL</con:runType>
+
+        <!-- Test Case 1: Fluxo normal com dados validos -->
+        <con:testCase id="TC_FluxoNormal" name="TC01_FluxoNormal_DadosValidos" searchProperties="true" failOnError="true" failTestCaseOnErrors="true" keepSession="false" maxResults="0">
+            <con:settings/>
+            <con:testStep type="request" name="EnviarRequest_DadosValidos">
+                <con:settings/>
+                <con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+                    <con:interface>AtribuicaoMedicoBinding</con:interface>
+                    <con:operation>AtribuicaoMedico</con:operation>
+                    <con:request name="TC01_DadosValidos">
+                        <con:encoding>UTF-8</con:encoding>
+                        <con:endpoint>${#Project#ENDPOINT_URL}</con:endpoint>
+                        <con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
+                     xmlns:atr="http://igif.min-saude.pt/rnu/atribuicaomedico">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <atr:AtribuicaoMedicoRequest>
+         <atr:event_id>2001</atr:event_id>
+         <atr:NNU>123456789</atr:NNU>
+         <atr:DataNasc>1985-06-15T00:00:00</atr:DataNasc>
+         <atr:SYS_ENTIDADES_ID_ORIGEM>500</atr:SYS_ENTIDADES_ID_ORIGEM>
+         <atr:PRO_EQUIPA_ID_ORIGEM>10</atr:PRO_EQUIPA_ID_ORIGEM>
+         <atr:PRO_EQUIPA_ID_DESTINO>20</atr:PRO_EQUIPA_ID_DESTINO>
+         <atr:Parentesco>Proprio</atr:Parentesco>
+         <atr:PROC_FAM>99001</atr:PROC_FAM>
+      </atr:AtribuicaoMedicoRequest>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request>
+                        <con:assertion type="SOAP Response" id="ValidSoapResponse"/>
+                        <con:assertion type="Not SOAP Fault" id="NotSoapFault"/>
+                        <con:assertion type="Schema Compliance" id="SchemaValid"/>
+                        <con:assertion type="XPath Match" id="HasCodigoResposta">
+                            <con:configuration>
+                                <path>declare namespace tns='http://igif.min-saude.pt/rnu/atribuicaomedico';
+count(//tns:CodigoResposta)</path>
+                                <content>1</content>
+                            </con:configuration>
+                        </con:assertion>
+                        <con:assertion type="XPath Match" id="HasMensagemResposta">
+                            <con:configuration>
+                                <path>declare namespace tns='http://igif.min-saude.pt/rnu/atribuicaomedico';
+count(//tns:MensagemResposta)</path>
+                                <content>1</content>
+                            </con:configuration>
+                        </con:assertion>
+                    </con:request>
+                </con:config>
+            </con:testStep>
+        </con:testCase>
+
+        <!-- Test Case 2: Teste com parentesco diferente -->
+        <con:testCase id="TC_Parentesco" name="TC02_ParentescoDiferente" searchProperties="true" failOnError="true" failTestCaseOnErrors="true" keepSession="false" maxResults="0">
+            <con:settings/>
+            <con:testStep type="request" name="EnviarRequest_Conjuge">
+                <con:settings/>
+                <con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+                    <con:interface>AtribuicaoMedicoBinding</con:interface>
+                    <con:operation>AtribuicaoMedico</con:operation>
+                    <con:request name="TC02_Conjuge">
+                        <con:encoding>UTF-8</con:encoding>
+                        <con:endpoint>${#Project#ENDPOINT_URL}</con:endpoint>
+                        <con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
+                     xmlns:atr="http://igif.min-saude.pt/rnu/atribuicaomedico">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <atr:AtribuicaoMedicoRequest>
+         <atr:event_id>2002</atr:event_id>
+         <atr:NNU>987654321</atr:NNU>
+         <atr:DataNasc>1990-03-22T00:00:00</atr:DataNasc>
+         <atr:SYS_ENTIDADES_ID_ORIGEM>501</atr:SYS_ENTIDADES_ID_ORIGEM>
+         <atr:PRO_EQUIPA_ID_ORIGEM>11</atr:PRO_EQUIPA_ID_ORIGEM>
+         <atr:PRO_EQUIPA_ID_DESTINO>21</atr:PRO_EQUIPA_ID_DESTINO>
+         <atr:Parentesco>Conjuge</atr:Parentesco>
+         <atr:PROC_FAM>99002</atr:PROC_FAM>
+      </atr:AtribuicaoMedicoRequest>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request>
+                        <con:assertion type="SOAP Response" id="ValidSoapResponse"/>
+                        <con:assertion type="Not SOAP Fault" id="NotSoapFault"/>
+                        <con:assertion type="Schema Compliance" id="SchemaValid"/>
+                        <con:assertion type="XPath Match" id="HasCodigoParentesco">
+                            <con:configuration>
+                                <path>declare namespace tns='http://igif.min-saude.pt/rnu/atribuicaomedico';
+count(//tns:CodigoParentesco)</path>
+                                <content>1</content>
+                            </con:configuration>
+                        </con:assertion>
+                    </con:request>
+                </con:config>
+            </con:testStep>
+        </con:testCase>
+
+        <!-- Test Case 3: Novo Processo de Familia -->
+        <con:testCase id="TC_NovoProcesso" name="TC03_NovoProcessoFamilia" searchProperties="true" failOnError="true" failTestCaseOnErrors="true" keepSession="false" maxResults="0">
+            <con:settings/>
+            <con:testStep type="request" name="EnviarRequest_NovoProcesso">
+                <con:settings/>
+                <con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+                    <con:interface>AtribuicaoMedicoBinding</con:interface>
+                    <con:operation>AtribuicaoMedico</con:operation>
+                    <con:request name="TC03_NovoProcesso">
+                        <con:encoding>UTF-8</con:encoding>
+                        <con:endpoint>${#Project#ENDPOINT_URL}</con:endpoint>
+                        <con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
+                     xmlns:atr="http://igif.min-saude.pt/rnu/atribuicaomedico">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <atr:AtribuicaoMedicoRequest>
+         <atr:event_id>2003</atr:event_id>
+         <atr:NNU>777888999</atr:NNU>
+         <atr:DataNasc>2000-07-18T00:00:00</atr:DataNasc>
+         <atr:SYS_ENTIDADES_ID_ORIGEM>504</atr:SYS_ENTIDADES_ID_ORIGEM>
+         <atr:PRO_EQUIPA_ID_ORIGEM>13</atr:PRO_EQUIPA_ID_ORIGEM>
+         <atr:PRO_EQUIPA_ID_DESTINO>23</atr:PRO_EQUIPA_ID_DESTINO>
+         <atr:Parentesco>Proprio</atr:Parentesco>
+         <atr:PROC_FAM>0</atr:PROC_FAM>
+      </atr:AtribuicaoMedicoRequest>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request>
+                        <con:assertion type="SOAP Response" id="ValidSoapResponse"/>
+                        <con:assertion type="Not SOAP Fault" id="NotSoapFault"/>
+                        <con:assertion type="Schema Compliance" id="SchemaValid"/>
+                        <con:assertion type="XPath Match" id="HasNovoProcessoFamilia">
+                            <con:configuration>
+                                <path>declare namespace tns='http://igif.min-saude.pt/rnu/atribuicaomedico';
+count(//tns:NovoProcessoFamilia)</path>
+                                <content>1</content>
+                            </con:configuration>
+                        </con:assertion>
+                    </con:request>
+                </con:config>
+            </con:testStep>
+        </con:testCase>
+
+    </con:testSuite>
+
+</con:soapui-project>
