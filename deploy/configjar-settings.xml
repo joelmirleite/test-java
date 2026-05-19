@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Ficheiro de configuração para o OSB configjar offline tool.
+    Gera um sbconfig.jar válido a partir dos ficheiros fonte do projeto.
+
+    Uso:
+      1. Ajustar os caminhos <project dir="..."> para apontar ao directório
+         do projeto RNU-AtribuicaoMedico no seu ambiente.
+      2. Executar:
+         cd $OSB_HOME/tools/configjar
+         source setenv.sh
+         ./configjar.sh -settingsfile /caminho/para/configjar-settings.xml
+-->
+<configjarSettings xmlns="http://www.bea.com/alsb/tools/configjar/config">
+    <source>
+        <!-- Ajustar o caminho para o directório do projeto no seu ambiente -->
+        <project dir="${PROJECT_DIR}/RNU-AtribuicaoMedico"/>
+    </source>
+
+    <configjar jar="${OUTPUT_DIR}/sbconfig.jar">
+        <projectLevel includeSystem="false"/>
+    </configjar>
+</configjarSettings>
