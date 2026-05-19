@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:businessServiceEntry xmlns:con="http://xmlns.oracle.com/servicebus/business/config"
+                          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                          xmlns:tran="http://www.bea.com/wli/sb/transports"
+                          xmlns:jca="http://www.bea.com/wli/sb/transports/jca"
+                          xmlns:oper="http://xmlns.oracle.com/servicebus/business/operations">
+    <con:coreEntry isProxy="false" isEnabled="true">
+        <con:binding type="SOAP" isSoap12="false" xsi:type="con1:SoapBindingType"
+                     xmlns:con1="http://www.bea.com/wli/sb/services/bindings/config">
+            <con1:wsdl ref="RNU-AtribuicaoMedico/BusinessService/AtribuicaoMedicoDestino_db"/>
+            <con1:binding>
+                <con1:name>AtribuicaoMedicoDestino_ptt-binding</con1:name>
+                <con1:namespace>http://xmlns.oracle.com/pcbpel/adapter/db/sp/AtribuicaoMedicoDestino</con1:namespace>
+            </con1:binding>
+        </con:binding>
+        <con:monitoring isEnabled="true">
+            <con:aggregationInterval>10</con:aggregationInterval>
+            <con:pipelineMonitoringLevel>Pipeline</con:pipelineMonitoringLevel>
+        </con:monitoring>
+        <con:reporting>true</con:reporting>
+        <con:logging isEnabled="true">
+            <con:logLevel>debug</con:logLevel>
+        </con:logging>
+        <con:throttling isEnabled="false">
+            <con:maxConcurrency>10</con:maxConcurrency>
+            <con:messageExpiryEnabled>false</con:messageExpiryEnabled>
+        </con:throttling>
+    </con:coreEntry>
+    <con:endpointConfig>
+        <tran:provider-id>jca</tran:provider-id>
+        <tran:inbound>false</tran:inbound>
+        <tran:URI>
+            <tran:value>jca://eis/DB/igifDS</tran:value>
+        </tran:URI>
+        <tran:outbound-properties>
+            <tran:load-balancing-algorithm>round-robin</tran:load-balancing-algorithm>
+            <tran:retry-count>0</tran:retry-count>
+            <tran:retry-interval>5</tran:retry-interval>
+        </tran:outbound-properties>
+        <tran:provider-specific xsi:type="jca:JCAEndPointConfiguration">
+            <jca:jca-file ref="RNU-AtribuicaoMedico/BusinessService/AtribuicaoMedicoDestino_db"/>
+            <jca:adapter-name>DbAdapter</jca:adapter-name>
+            <jca:connection-factory-location>eis/DB/igifDS</jca:connection-factory-location>
+        </tran:provider-specific>
+    </con:endpointConfig>
+</con:businessServiceEntry>

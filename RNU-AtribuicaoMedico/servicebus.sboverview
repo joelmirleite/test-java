@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xml-fragment xmlns:ser="http://www.bea.com/wli/sb/services"
+              xmlns:con="http://www.bea.com/wli/sb/typesystem/config">
+    <con:weightedName>
+        <con:name>RNU-AtribuicaoMedico</con:name>
+        <con:weight>1</con:weight>
+    </con:weightedName>
+    <con:weightedDescription>
+        <con:description>WebService AtribuicaoMedico - Servico de atribuicao de medico de destino.
+Integra com a stored procedure igif.inscr_api_ws.atribuicao_medico_destino.
+Parametros de entrada: event_id, NNU, DataNasc, SYS_ENTIDADES_ID_ORIGEM, PRO_EQUIPA_ID_ORIGEM, PRO_EQUIPA_ID_DESTINO, Parentesco, PROC_FAM.
+Parametros de saida: CodigoResposta, MensagemResposta, NovoProcessoFamilia (opcional), CodigoParentesco (opcional).</con:description>
+        <con:weight>1</con:weight>
+    </con:weightedDescription>
+</xml-fragment>

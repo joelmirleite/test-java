@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:proxyServiceEntry xmlns:con="http://xmlns.oracle.com/servicebus/proxy/config"
+                       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                       xmlns:tran="http://www.bea.com/wli/sb/transports"
+                       xmlns:http="http://www.bea.com/wli/sb/transports/http"
+                       xmlns:oper="http://xmlns.oracle.com/servicebus/proxy/operations">
+    <con:coreEntry isProxy="true" isEnabled="true">
+        <con:binding type="SOAP" isSoap12="false" xsi:type="con1:SoapBindingType"
+                     xmlns:con1="http://www.bea.com/wli/sb/services/bindings/config">
+            <con1:wsdl ref="RNU-AtribuicaoMedico/WSDL/AtribuicaoMedico"/>
+            <con1:binding>
+                <con1:name>AtribuicaoMedicoBinding</con1:name>
+                <con1:namespace>http://igif.min-saude.pt/rnu/atribuicaomedico</con1:namespace>
+            </con1:binding>
+        </con:binding>
+        <con:monitoring isEnabled="true">
+            <con:aggregationInterval>10</con:aggregationInterval>
+            <con:pipelineMonitoringLevel>Pipeline</con:pipelineMonitoringLevel>
+        </con:monitoring>
+        <con:reporting>true</con:reporting>
+        <con:logging isEnabled="true">
+            <con:logLevel>debug</con:logLevel>
+        </con:logging>
+        <con:sla-alerting isEnabled="true">
+            <con:sla-alert-rule>
+                <con:name>SLA_AtribuicaoMedico</con:name>
+                <con:isActive>true</con:isActive>
+                <con:condition>
+                    <con:metric>response-time</con:metric>
+                    <con:operator>GT</con:operator>
+                    <con:value>5000</con:value>
+                </con:condition>
+                <con:alert-destination>
+                    <con:name>AlertDestination</con:name>
+                </con:alert-destination>
+            </con:sla-alert-rule>
+        </con:sla-alerting>
+        <con:ws-policy>
+            <con:binding-mode>wsdl-policy-attachments</con:binding-mode>
+        </con:ws-policy>
+    </con:coreEntry>
+    <con:endpointConfig>
+        <tran:provider-id>http</tran:provider-id>
+        <tran:inbound>true</tran:inbound>
+        <tran:URI>
+            <tran:value>/RNU-AtribuicaoMedico/ProxyService/AtribuicaoMedico_PS</tran:value>
+        </tran:URI>
+        <tran:inbound-properties/>
+        <tran:all-headers>false</tran:all-headers>
+        <tran:provider-specific xsi:type="http:HttpEndPointConfiguration">
+            <http:inbound-properties>
+                <http:request-encoding>UTF-8</http:request-encoding>
+                <http:response-encoding>UTF-8</http:response-encoding>
+            </http:inbound-properties>
+        </tran:provider-specific>
+    </con:endpointConfig>
+    <con:router>
+        <con:pipeline ref="RNU-AtribuicaoMedico/Pipeline/AtribuicaoMedico_PL"/>
+    </con:router>
+</con:proxyServiceEntry>

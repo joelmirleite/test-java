@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Ant build file para gerar sbconfig.jar usando o OSB configjar tool.
+    
+    Pre-requisitos:
+      - Oracle Service Bus 11.1.1.7+ ou 12c instalado
+      - Variavel de ambiente OSB_HOME definida (ex: /u01/app/oracle/middleware/osb)
+      - Ant disponivel no PATH
+    
+    Uso:
+      ant -f build.xml                          (usa OSB_HOME do ambiente)
+      ant -f build.xml -Dosb.home=/caminho/osb  (especifica OSB_HOME)
+      ant -f build.xml clean                    (limpa ficheiros gerados)
+    
+    Output:
+      deploy/sbconfig.jar - ficheiro pronto para importar na OSB Console
+-->
+<project name="RNU-AtribuicaoMedico" default="build" basedir="..">
+
+    <!-- Propriedades configuráveis -->
+    <property name="osb.home" value="${env.OSB_HOME}"/>
+    <property name="project.name" value="RNU-AtribuicaoMedico"/>
+    <property name="project.dir" location="${basedir}/${project.name}"/>
+    <property name="output.dir" location="${basedir}/deploy"/>
+    <property name="output.jar" value="sbconfig.jar"/>
+    <property name="settings.file" location="${output.dir}/configjar-settings-generated.xml"/>
+
+    <!-- Classpath do configjar -->
+    <path id="configjar.path">
+        <pathelement path="${osb.home}/tools/configjar/configjar.jar"/>
+    </path>
+
+    <!-- Registar a task do configjar -->
+    <taskdef name="configjar"
+             classname="com.bea.alsb.tools.configjar.ant.ConfigJarTask"
+             classpathref="configjar.path"/>
+
+    <!-- Verificações -->
+    <target name="check">
+        <fail message="OSB_HOME nao definido. Use: ant -Dosb.home=/caminho/para/osb">
+            <condition>
+                <or>
+                    <equals arg1="${osb.home}" arg2=""/>
+                    <equals arg1="${osb.home}" arg2="${env.OSB_HOME}"/>
+                </or>
+            </condition>
+        </fail>
+        <available file="${osb.home}/tools/configjar/configjar.jar" property="configjar.exists"/>
+        <fail message="configjar.jar nao encontrado em ${osb.home}/tools/configjar/" unless="configjar.exists"/>
+        <available file="${project.dir}" type="dir" property="project.exists"/>
+        <fail message="Directorio do projecto nao encontrado: ${project.dir}" unless="project.exists"/>
+        <echo message="[OK] OSB_HOME: ${osb.home}"/>
+        <echo message="[OK] Projecto: ${project.dir}"/>
+    </target>
+
+    <!-- Gerar sbconfig.jar usando configjar Ant task -->
+    <target name="build" depends="check" description="Gerar sbconfig.jar">
+        <echo message="============================================================"/>
+        <echo message=" Gerar sbconfig.jar - ${project.name}"/>
+        <echo message="============================================================"/>
+        <mkdir dir="${output.dir}"/>
+        <configjar failonerror="true"
+                   settingsFile="${output.dir}/configjar-settings.xml">
+        </configjar>
+        <echo message=""/>
+        <echo message=" sbconfig.jar gerado com sucesso!"/>
+        <echo message=" Ficheiro: ${output.dir}/${output.jar}"/>
+        <echo message=""/>
+        <echo message=" Para importar na OSB Console:"/>
+        <echo message="   1. System Administration > Import/Export"/>
+        <echo message="   2. Import Resources"/>
+        <echo message="   3. Selecionar ${output.dir}/${output.jar}"/>
+        <echo message="   4. Confirmar e Activar"/>
+        <echo message="============================================================"/>
+    </target>
+
+    <!-- Limpar ficheiros gerados -->
+    <target name="clean" description="Limpar ficheiros gerados">
+        <delete file="${output.dir}/${output.jar}" verbose="true"/>
+        <delete file="${settings.file}" verbose="true"/>
+    </target>
+
+</project>
