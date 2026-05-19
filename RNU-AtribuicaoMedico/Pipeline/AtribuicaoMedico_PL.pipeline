@@ -5,7 +5,7 @@
               xmlns:con2="http://www.bea.com/wli/sb/stages/transform/config"
               xmlns:con3="http://www.bea.com/wli/sb/stages/logging/config"
               xmlns:con4="http://www.bea.com/wli/sb/stages/routing/config"
-              xmlns:con5="http://www.bea.com/wli/sb/stages/alert/config">
+              xmlns:ctx="http://www.bea.com/wli/sb/context">
 
     <con:pipelineEntry>
         <con:coreEntry>
@@ -18,130 +18,116 @@
             </con:binding>
         </con:coreEntry>
 
-        <!-- Request Pipeline -->
-        <con:request-pipeline>
-            <!-- Stage: Log Request -->
-            <con:stage name="LogRequest">
-                <con:context/>
-                <con:actions>
-                    <con3:log>
-                        <con1:id>LogRequest_Action</con1:id>
-                        <con3:logLevel>info</con3:logLevel>
-                        <con3:expr>
-                            <con1:xqueryText>fn:concat('[AtribuicaoMedico_PL] Request recebido - event_id: ', $body//*:event_id/text())</con1:xqueryText>
-                        </con3:expr>
-                        <con3:message>[AtribuicaoMedico] Request Pipeline - Inicio</con3:message>
-                    </con3:log>
-                </con:actions>
-            </con:stage>
-
-            <!-- Stage: Validate Request -->
-            <con:stage name="ValidateRequest">
-                <con:context/>
-                <con:actions>
-                    <con2:validate>
-                        <con1:id>ValidateRequest_Action</con1:id>
-                        <con2:schema ref="RNU-AtribuicaoMedico/XSD/AtribuicaoMedico"/>
-                        <con2:schemaElement xmlns:tns="http://igif.min-saude.pt/rnu/atribuicaomedico">tns:AtribuicaoMedicoRequest</con2:schemaElement>
-                        <con2:varName>body</con2:varName>
-                        <con2:location>
-                            <con1:xpathText>./*:AtribuicaoMedicoRequest</con1:xpathText>
-                        </con2:location>
-                    </con2:validate>
-                </con:actions>
-            </con:stage>
-
-            <!-- Stage: Transform Request for DB Call -->
-            <con:stage name="TransformRequest">
-                <con:context/>
-                <con:actions>
-                    <con2:assign varName="requestParams">
-                        <con1:id>ExtractRequestParams</con1:id>
-                        <con2:expr>
-                            <con1:xqueryText>
-                                <![CDATA[
-                                let $req := $body/*:AtribuicaoMedicoRequest
-                                return
-                                <db:InputParameters xmlns:db="http://xmlns.oracle.com/pcbpel/adapter/db/sp/AtribuicaoMedicoDestino">
-                                    <db:P_EVENT_ID>{$req/*:event_id/text()}</db:P_EVENT_ID>
-                                    <db:P_NNU>{$req/*:NNU/text()}</db:P_NNU>
-                                    <db:P_DATA_NASC>{$req/*:DataNasc/text()}</db:P_DATA_NASC>
-                                    <db:P_SYS_ENTIDADES_ID_ORIGEM>{$req/*:SYS_ENTIDADES_ID_ORIGEM/text()}</db:P_SYS_ENTIDADES_ID_ORIGEM>
-                                    <db:P_PRO_EQUIPA_ID_ORIGEM>{$req/*:PRO_EQUIPA_ID_ORIGEM/text()}</db:P_PRO_EQUIPA_ID_ORIGEM>
-                                    <db:P_PRO_EQUIPA_ID_DESTINO>{$req/*:PRO_EQUIPA_ID_DESTINO/text()}</db:P_PRO_EQUIPA_ID_DESTINO>
-                                    <db:P_PARENTESCO>{$req/*:Parentesco/text()}</db:P_PARENTESCO>
-                                    <db:P_PROC_FAM>{$req/*:PROC_FAM/text()}</db:P_PROC_FAM>
-                                    <db:P_COD_RESPOSTA/>
-                                    <db:P_MSG_RESPOSTA/>
-                                    <db:P_NOVO_PROC_FAM/>
-                                    <db:P_COD_PARENTESCO/>
-                                </db:InputParameters>
-                                ]]>
-                            </con1:xqueryText>
-                        </con2:expr>
-                    </con2:assign>
-                </con:actions>
-            </con:stage>
-        </con:request-pipeline>
-
-        <!-- Response Pipeline -->
-        <con:response-pipeline>
-            <!-- Stage: Transform Response -->
-            <con:stage name="TransformResponse">
-                <con:context/>
-                <con:actions>
-                    <con2:replace varName="body" contents-only="true">
-                        <con1:id>TransformDBResponse</con1:id>
-                        <con2:location>
-                            <con1:xpathText>.</con1:xpathText>
-                        </con2:location>
-                        <con2:expr>
-                            <con1:xqueryText>
-                                <![CDATA[
-                                let $dbResponse := $body/*:OutputParameters
-                                return
-                                <tns:AtribuicaoMedicoResponse xmlns:tns="http://igif.min-saude.pt/rnu/atribuicaomedico">
-                                    <tns:CodigoResposta>{$dbResponse/*:P_COD_RESPOSTA/text()}</tns:CodigoResposta>
-                                    <tns:MensagemResposta>{$dbResponse/*:P_MSG_RESPOSTA/text()}</tns:MensagemResposta>
-                                    {
-                                        if ($dbResponse/*:P_NOVO_PROC_FAM/text() != '') then
-                                            <tns:NovoProcessoFamilia>{$dbResponse/*:P_NOVO_PROC_FAM/text()}</tns:NovoProcessoFamilia>
-                                        else ()
-                                    }
-                                    {
-                                        if ($dbResponse/*:P_COD_PARENTESCO/text() != '') then
-                                            <tns:CodigoParentesco>{$dbResponse/*:P_COD_PARENTESCO/text()}</tns:CodigoParentesco>
-                                        else ()
-                                    }
-                                </tns:AtribuicaoMedicoResponse>
-                                ]]>
-                            </con1:xqueryText>
-                        </con2:expr>
-                    </con2:replace>
-                </con:actions>
-            </con:stage>
-
-            <!-- Stage: Log Response -->
-            <con:stage name="LogResponse">
-                <con:context/>
-                <con:actions>
-                    <con3:log>
-                        <con1:id>LogResponse_Action</con1:id>
-                        <con3:logLevel>info</con3:logLevel>
-                        <con3:expr>
-                            <con1:xqueryText>fn:concat('[AtribuicaoMedico_PL] Response - CodigoResposta: ', $body//*:CodigoResposta/text())</con1:xqueryText>
-                        </con3:expr>
-                        <con3:message>[AtribuicaoMedico] Response Pipeline - Fim</con3:message>
-                    </con3:log>
-                </con:actions>
-            </con:stage>
-        </con:response-pipeline>
-
-        <!-- Router -->
         <con:router>
-            <con:pipeline type="request" name="RequestPipeline"/>
-            <con:pipeline type="response" name="ResponsePipeline"/>
+            <con:pipeline type="request" name="request-pipeline">
+                <con:stage name="LogRequest">
+                    <con:context/>
+                    <con:actions>
+                        <con3:log>
+                            <con1:id>LogRequest_Action</con1:id>
+                            <con3:logLevel>info</con3:logLevel>
+                            <con3:expr>
+                                <con1:xqueryText>fn:concat('[AtribuicaoMedico_PL] Request recebido - event_id: ', $body//*:event_id/text())</con1:xqueryText>
+                            </con3:expr>
+                            <con3:message>[AtribuicaoMedico] Request Pipeline - Inicio</con3:message>
+                        </con3:log>
+                    </con:actions>
+                </con:stage>
+
+                <con:stage name="ValidateRequest">
+                    <con:context/>
+                    <con:actions>
+                        <con2:validate>
+                            <con1:id>ValidateRequest_Action</con1:id>
+                            <con2:schema ref="RNU-AtribuicaoMedico/XSD/AtribuicaoMedico"/>
+                            <con2:schemaElement xmlns:tns="http://igif.min-saude.pt/rnu/atribuicaomedico">tns:AtribuicaoMedicoRequest</con2:schemaElement>
+                            <con2:varName>body</con2:varName>
+                            <con2:location>
+                                <con1:xpathText>./*:AtribuicaoMedicoRequest</con1:xpathText>
+                            </con2:location>
+                        </con2:validate>
+                    </con:actions>
+                </con:stage>
+
+                <con:stage name="TransformRequest">
+                    <con:context/>
+                    <con:actions>
+                        <con2:assign varName="requestParams">
+                            <con1:id>ExtractRequestParams</con1:id>
+                            <con2:expr>
+                                <con1:xqueryText><![CDATA[let $req := $body/*:AtribuicaoMedicoRequest
+return
+<db:InputParameters xmlns:db="http://xmlns.oracle.com/pcbpel/adapter/db/sp/AtribuicaoMedicoDestino">
+    <db:P_EVENT_ID>{$req/*:event_id/text()}</db:P_EVENT_ID>
+    <db:P_NNU>{$req/*:NNU/text()}</db:P_NNU>
+    <db:P_DATA_NASC>{$req/*:DataNasc/text()}</db:P_DATA_NASC>
+    <db:P_SYS_ENTIDADES_ID_ORIGEM>{$req/*:SYS_ENTIDADES_ID_ORIGEM/text()}</db:P_SYS_ENTIDADES_ID_ORIGEM>
+    <db:P_PRO_EQUIPA_ID_ORIGEM>{$req/*:PRO_EQUIPA_ID_ORIGEM/text()}</db:P_PRO_EQUIPA_ID_ORIGEM>
+    <db:P_PRO_EQUIPA_ID_DESTINO>{$req/*:PRO_EQUIPA_ID_DESTINO/text()}</db:P_PRO_EQUIPA_ID_DESTINO>
+    <db:P_PARENTESCO>{$req/*:Parentesco/text()}</db:P_PARENTESCO>
+    <db:P_PROC_FAM>{$req/*:PROC_FAM/text()}</db:P_PROC_FAM>
+    <db:P_COD_RESPOSTA/>
+    <db:P_MSG_RESPOSTA/>
+    <db:P_NOVO_PROC_FAM/>
+    <db:P_COD_PARENTESCO/>
+</db:InputParameters>]]></con1:xqueryText>
+                            </con2:expr>
+                        </con2:assign>
+                    </con:actions>
+                </con:stage>
+            </con:pipeline>
+
+            <con:pipeline type="response" name="response-pipeline">
+                <con:stage name="TransformResponse">
+                    <con:context/>
+                    <con:actions>
+                        <con2:replace varName="body" contents-only="true">
+                            <con1:id>TransformDBResponse</con1:id>
+                            <con2:location>
+                                <con1:xpathText>.</con1:xpathText>
+                            </con2:location>
+                            <con2:expr>
+                                <con1:xqueryText><![CDATA[let $dbResponse := $body/*:OutputParameters
+return
+<tns:AtribuicaoMedicoResponse xmlns:tns="http://igif.min-saude.pt/rnu/atribuicaomedico">
+    <tns:CodigoResposta>{$dbResponse/*:P_COD_RESPOSTA/text()}</tns:CodigoResposta>
+    <tns:MensagemResposta>{$dbResponse/*:P_MSG_RESPOSTA/text()}</tns:MensagemResposta>
+    {
+        if ($dbResponse/*:P_NOVO_PROC_FAM/text() != '') then
+            <tns:NovoProcessoFamilia>{$dbResponse/*:P_NOVO_PROC_FAM/text()}</tns:NovoProcessoFamilia>
+        else ()
+    }
+    {
+        if ($dbResponse/*:P_COD_PARENTESCO/text() != '') then
+            <tns:CodigoParentesco>{$dbResponse/*:P_COD_PARENTESCO/text()}</tns:CodigoParentesco>
+        else ()
+    }
+</tns:AtribuicaoMedicoResponse>]]></con1:xqueryText>
+                            </con2:expr>
+                        </con2:replace>
+                    </con:actions>
+                </con:stage>
+
+                <con:stage name="LogResponse">
+                    <con:context/>
+                    <con:actions>
+                        <con3:log>
+                            <con1:id>LogResponse_Action</con1:id>
+                            <con3:logLevel>info</con3:logLevel>
+                            <con3:expr>
+                                <con1:xqueryText>fn:concat('[AtribuicaoMedico_PL] Response - CodigoResposta: ', $body//*:CodigoResposta/text())</con1:xqueryText>
+                            </con3:expr>
+                            <con3:message>[AtribuicaoMedico] Response Pipeline - Fim</con3:message>
+                        </con3:log>
+                    </con:actions>
+                </con:stage>
+            </con:pipeline>
+
             <con:flow>
+                <con:pipeline-node name="PipelinePairNode1">
+                    <con:request>request-pipeline</con:request>
+                    <con:response>response-pipeline</con:response>
+                </con:pipeline-node>
                 <con:route-node name="RouteToBS">
                     <con:context/>
                     <con:actions>
@@ -168,7 +154,6 @@
             </con:flow>
         </con:router>
 
-        <!-- Error Handler -->
         <con:error-handler>
             <con:stage name="ErrorHandler">
                 <con:context/>
@@ -187,14 +172,10 @@
                             <con1:xpathText>.</con1:xpathText>
                         </con2:location>
                         <con2:expr>
-                            <con1:xqueryText>
-                                <![CDATA[
-                                <tns:AtribuicaoMedicoResponse xmlns:tns="http://igif.min-saude.pt/rnu/atribuicaomedico">
-                                    <tns:CodigoResposta>-1</tns:CodigoResposta>
-                                    <tns:MensagemResposta>{fn:concat('Erro no processamento: ', $fault/ctx:reason/text())}</tns:MensagemResposta>
-                                </tns:AtribuicaoMedicoResponse>
-                                ]]>
-                            </con1:xqueryText>
+                            <con1:xqueryText><![CDATA[<tns:AtribuicaoMedicoResponse xmlns:tns="http://igif.min-saude.pt/rnu/atribuicaomedico">
+    <tns:CodigoResposta>-1</tns:CodigoResposta>
+    <tns:MensagemResposta>{fn:concat('Erro no processamento: ', $fault/ctx:reason/text())}</tns:MensagemResposta>
+</tns:AtribuicaoMedicoResponse>]]></con1:xqueryText>
                         </con2:expr>
                     </con2:replace>
                     <con1:reply isError="false">
