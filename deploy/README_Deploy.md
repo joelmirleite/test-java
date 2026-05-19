@@ -3,11 +3,89 @@
 ## Pré-requisitos
 
 - Oracle Service Bus 12c (12.2.1.x) instalado
+- JDeveloper 12c com Service Bus Extension (para exportação via IDE)
 - Java JDK 1.8+
 - Apache Ant (incluído no Middleware Home: `$MW_HOME/oracle_common/modules/thirdparty/ant`)
 - Variável `OSB_HOME` definida (ex: `/u01/app/oracle/middleware/osb`)
 
-## Gerar sbconfig.jar
+---
+
+## ⭐ Opção Recomendada: Exportar sbconfig.jar do JDeveloper
+
+Esta é a forma mais fiável de gerar o `sbconfig.jar` com o formato binário correcto para importar na OSB Console.
+
+### Passo 1 — Abrir/Importar o Projecto no JDeveloper
+
+1. Abrir o **JDeveloper 12c** (com Service Bus Extension instalada)
+2. Se o projecto ainda não está no workspace:
+   - **File** → **Import** → **Service Bus Resources**
+   - Selecionar a pasta `RNU-AtribuicaoMedico/` do repositório clonado
+   - Confirmar o import
+3. Se já tem o projecto, basta abrir o `RNU-AtribuicaoMedico.jpr`
+
+### Passo 2 — Verificar a Estrutura do Projecto
+
+No painel **Application Navigator**, confirmar que todos os recursos estão presentes:
+
+```
+RNU-AtribuicaoMedico/
+├── XSD/
+│   └── AtribuicaoMedico.xsd
+├── WSDL/
+│   └── AtribuicaoMedico.wsdl
+├── BusinessService/
+│   ├── AtribuicaoMedico_BS.bix
+│   ├── AtribuicaoMedicoDestino_db.wsdl
+│   └── AtribuicaoMedicoDestino_db.jca
+├── ProxyService/
+│   └── AtribuicaoMedico_PS.proxy
+├── Pipeline/
+│   └── AtribuicaoMedico_PL.pipeline
+└── Transformation/
+    ├── RequestToDBInput.xqy
+    └── DBOutputToResponse.xqy
+```
+
+### Passo 3 — Exportar como Configuration JAR (sbconfig.jar)
+
+1. No **Application Navigator**, clicar com o botão direito no projecto **RNU-AtribuicaoMedico**
+2. Selecionar **Export** → **Service Bus Resources...**
+3. Na janela de exportação:
+   - **Export Format**: selecionar **Configuration JAR**
+   - **File Name**: escolher o destino, ex: `sbconfig.jar`
+   - **Resources**: verificar que todos os recursos estão seleccionados (✓)
+   - **Include Dependencies**: marcar se quiser incluir dependências
+4. Clicar em **OK** / **Export**
+
+O JDeveloper irá gerar o `sbconfig.jar` com a serialização Java binária correcta.
+
+### Passo 4 — Importar na OSB Console
+
+1. Abrir a OSB Console: `http://<host>:7001/sbconsole`
+2. Clicar em **Create** (iniciar sessão de edição)
+3. Ir a **System Administration** → **Import/Export** → **Import Resources**
+4. Selecionar o `sbconfig.jar` gerado pelo JDeveloper
+5. Confirmar os recursos a importar
+6. Clicar em **Import**
+7. Clicar em **Activate** para publicar as alterações
+
+### Alternativa: Deploy Directo do JDeveloper para o Servidor
+
+Se o JDeveloper está ligado ao servidor OSB:
+
+1. No **Application Navigator**, clicar com o botão direito no projecto **RNU-AtribuicaoMedico**
+2. Selecionar **Deploy** → **Deploy to Service Bus Server...**
+3. Selecionar o **Application Server** configurado (ex: `IntegratedWebLogicServer` ou servidor remoto)
+4. Na janela de deploy:
+   - **Deploy Action**: **Publish to Service Bus**
+   - Verificar que todos os recursos estão seleccionados
+5. Clicar em **Finish**
+
+O JDeveloper irá compilar, empacotar e fazer deploy directamente no servidor OSB.
+
+---
+
+## Gerar sbconfig.jar (alternativas via linha de comando)
 
 O `sbconfig.jar` é um ficheiro com serialização Java binária interna do OSB — **não pode ser gerado manualmente**. É necessário usar o **configjar offline tool** incluído na instalação do OSB 12c.
 
