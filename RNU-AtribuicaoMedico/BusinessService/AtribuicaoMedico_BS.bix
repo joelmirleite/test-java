@@ -1,32 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xml-fragment xmlns:ser="http://www.bea.com/wli/sb/services"
-              xmlns:tran="http://www.bea.com/wli/sb/transports"
-              xmlns:env="http://www.bea.com/wli/sb/services/security/environment"
-              xmlns:jca="http://www.bea.com/wli/sb/transports/jca"
-              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-    <ser:coreEntry isProxy="false" isEnabled="true">
-        <ser:binding type="SOAP" isSoap12="false" xsi:type="con:SoapBindingType"
-                     xmlns:con="http://www.bea.com/wli/sb/services/bindings/config">
-            <con:wsdl ref="RNU-AtribuicaoMedico/BusinessService/AtribuicaoMedicoDestino_db"/>
-            <con:binding>
-                <con:name>AtribuicaoMedicoDestino_ptt-binding</con:name>
-                <con:namespace>http://xmlns.oracle.com/pcbpel/adapter/db/sp/AtribuicaoMedicoDestino</con:namespace>
-            </con:binding>
-        </ser:binding>
-        <ser:monitoring isEnabled="true">
-            <ser:aggregationInterval>10</ser:aggregationInterval>
-            <ser:pipelineMonitoringLevel>Pipeline</ser:pipelineMonitoringLevel>
-        </ser:monitoring>
-        <ser:reporting>true</ser:reporting>
-        <ser:logging isEnabled="true">
-            <ser:logLevel>debug</ser:logLevel>
-        </ser:logging>
-        <ser:throttling isEnabled="false">
-            <ser:maxConcurrency>10</ser:maxConcurrency>
-            <ser:messageExpiryEnabled>false</ser:messageExpiryEnabled>
-        </ser:throttling>
-    </ser:coreEntry>
-    <ser:endpointConfig>
+<con:businessServiceEntry xmlns:con="http://xmlns.oracle.com/servicebus/business/config"
+                          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                          xmlns:tran="http://www.bea.com/wli/sb/transports"
+                          xmlns:jca="http://www.bea.com/wli/sb/transports/jca"
+                          xmlns:oper="http://xmlns.oracle.com/servicebus/business/operations">
+    <con:coreEntry isProxy="false" isEnabled="true">
+        <con:binding type="SOAP" isSoap12="false" xsi:type="con1:SoapBindingType"
+                     xmlns:con1="http://www.bea.com/wli/sb/services/bindings/config">
+            <con1:wsdl ref="RNU-AtribuicaoMedico/BusinessService/AtribuicaoMedicoDestino_db"/>
+            <con1:binding>
+                <con1:name>AtribuicaoMedicoDestino_ptt-binding</con1:name>
+                <con1:namespace>http://xmlns.oracle.com/pcbpel/adapter/db/sp/AtribuicaoMedicoDestino</con1:namespace>
+            </con1:binding>
+        </con:binding>
+        <con:monitoring isEnabled="true">
+            <con:aggregationInterval>10</con:aggregationInterval>
+            <con:pipelineMonitoringLevel>Pipeline</con:pipelineMonitoringLevel>
+        </con:monitoring>
+        <con:reporting>true</con:reporting>
+        <con:logging isEnabled="true">
+            <con:logLevel>debug</con:logLevel>
+        </con:logging>
+        <con:throttling isEnabled="false">
+            <con:maxConcurrency>10</con:maxConcurrency>
+            <con:messageExpiryEnabled>false</con:messageExpiryEnabled>
+        </con:throttling>
+    </con:coreEntry>
+    <con:endpointConfig>
         <tran:provider-id>jca</tran:provider-id>
         <tran:inbound>false</tran:inbound>
         <tran:URI>
@@ -42,5 +42,5 @@
             <jca:adapter-name>DbAdapter</jca:adapter-name>
             <jca:connection-factory-location>eis/DB/igifDS</jca:connection-factory-location>
         </tran:provider-specific>
-    </ser:endpointConfig>
-</xml-fragment>
+    </con:endpointConfig>
+</con:businessServiceEntry>
